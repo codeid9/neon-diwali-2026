@@ -6,25 +6,18 @@
   <meta name="theme-color" content="#05010f" />
 
   <title>Happy Diwali 🪔 | A Neon Diwali Wish Card</title>
-  <meta name="description" content="A magical Diwali wish card — light a diya, watch neon fireworks and read your personalised Diwali greeting. Create and share your own wish in seconds." />
+  <meta name="description" content="A magical Diwali wish card — light a diya, play a memory game and share the magic." />
 
-  <!-- ============ Open Graph / WhatsApp preview ============ -->
   <meta property="og:type" content="website" />
   <meta property="og:site_name" content="Diwali Wish Card" />
   <meta property="og:title" content="Happy Diwali 🪔 | A Neon Diwali Wish Card" />
   <meta property="og:description" content="Light a diya, watch the fireworks and read your personalised Diwali wish." />
-  <!-- Replace with your deployed URL, e.g. https://username.github.io/repo/ -->
   <meta property="og:url" content="./" />
-  <!-- Optional: drop a 1200x630 preview image named og-image.png next to index.html -->
   <meta property="og:image" content="og-image.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Happy Diwali 🪔" />
-  <meta name="twitter:description" content="Light a diya, watch the fireworks and read your personalised Diwali wish." />
 
-  <!-- ============ Emoji favicon (inline SVG data URI, zero requests) ============ -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='88'>🪔</text></svg>" />
 
-  <!-- ============ Fonts (trimmed for mobile speed) ============ -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&family=Tiro+Devanagari+Hindi&family=Yatra+One&display=swap" rel="stylesheet" />
@@ -32,7 +25,6 @@
   <link rel="stylesheet" href="style.css" />
   <script src="script.js" defer></script>
 
-  <!-- Graceful fallback if JavaScript is disabled -->
   <noscript>
     <style>
       .intro { display: none !important; }
@@ -44,9 +36,6 @@
 
 <body class="is-locked">
 
-  <!-- =====================================================================
-       SHARED SVG GRADIENTS (referenced by every diya + flame in the page)
-       ===================================================================== -->
   <svg class="svg-defs" aria-hidden="true" focusable="false" width="0" height="0">
     <defs>
       <linearGradient id="gFlame" x1="0" y1="1" x2="0" y2="0">
@@ -64,20 +53,12 @@
         <stop offset="55%" stop-color="#ff7a00" stop-opacity=".22" />
         <stop offset="100%" stop-color="#ff7a00" stop-opacity="0" />
       </radialGradient>
-      <linearGradient id="gLantern" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ffcf6b" />
-        <stop offset="55%" stop-color="#ff8c00" />
-        <stop offset="100%" stop-color="#ff2e93" />
-      </linearGradient>
     </defs>
   </svg>
 
-  <!-- =====================================================================
-       1. INTRO / LOADER — tap the unlit diya to begin
-       ===================================================================== -->
+  <!-- INTRO -->
   <div class="intro" id="intro">
     <div class="intro__burst" aria-hidden="true"></div>
-
     <div class="intro__inner">
       <button class="intro__diya" id="introDiya" type="button"
               aria-label="Tap to light the diya and open the Diwali wish card">
@@ -96,22 +77,18 @@
           <ellipse cx="60" cy="75.4" rx="28" ry="4.2" fill="#a85000" opacity=".85" />
         </svg>
       </button>
-
       <p class="intro__hint">Tap to light the diya</p>
     </div>
   </div>
 
-  <!-- =====================================================================
-       BACKGROUND LAYERS
-       ===================================================================== -->
-  <div class="bg" id="bg" aria-hidden="true">
+  <!-- BG LAYERS -->
+  <div class="bg" aria-hidden="true">
     <div class="aurora aurora--1"></div>
     <div class="aurora aurora--2"></div>
     <div class="aurora aurora--3"></div>
     <div class="stars" id="stars"></div>
   </div>
 
-  <!-- Glowing neon rangoli / mandala (pure SVG, slowly rotating) -->
   <div class="rangoli" aria-hidden="true">
     <svg class="rangoli__svg" viewBox="0 0 400 400" focusable="false">
       <defs>
@@ -121,83 +98,36 @@
       <g fill="none" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="200" cy="200" r="188" stroke="rgba(255,179,0,.45)" stroke-width="1.5" stroke-dasharray="3 12" />
         <circle cx="200" cy="200" r="168" stroke="rgba(255,46,147,.30)" stroke-width="1" />
-
         <g stroke="rgba(138,43,226,.55)" stroke-width="1.6">
-          <use href="#rgPetal" />
-          <use href="#rgPetal" transform="rotate(30 200 200)" />
-          <use href="#rgPetal" transform="rotate(60 200 200)" />
-          <use href="#rgPetal" transform="rotate(90 200 200)" />
-          <use href="#rgPetal" transform="rotate(120 200 200)" />
-          <use href="#rgPetal" transform="rotate(150 200 200)" />
-          <use href="#rgPetal" transform="rotate(180 200 200)" />
-          <use href="#rgPetal" transform="rotate(210 200 200)" />
-          <use href="#rgPetal" transform="rotate(240 200 200)" />
-          <use href="#rgPetal" transform="rotate(270 200 200)" />
-          <use href="#rgPetal" transform="rotate(300 200 200)" />
-          <use href="#rgPetal" transform="rotate(330 200 200)" />
+          <use href="#rgPetal" /><use href="#rgPetal" transform="rotate(30 200 200)" /><use href="#rgPetal" transform="rotate(60 200 200)" /><use href="#rgPetal" transform="rotate(90 200 200)" /><use href="#rgPetal" transform="rotate(120 200 200)" /><use href="#rgPetal" transform="rotate(150 200 200)" /><use href="#rgPetal" transform="rotate(180 200 200)" /><use href="#rgPetal" transform="rotate(210 200 200)" /><use href="#rgPetal" transform="rotate(240 200 200)" /><use href="#rgPetal" transform="rotate(270 200 200)" /><use href="#rgPetal" transform="rotate(300 200 200)" /><use href="#rgPetal" transform="rotate(330 200 200)" />
         </g>
-
         <g stroke="rgba(0,229,255,.45)" stroke-width="1.2">
-          <use href="#rgPetalSmall" />
-          <use href="#rgPetalSmall" transform="rotate(30 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(60 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(90 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(120 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(150 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(180 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(210 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(240 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(270 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(300 200 200)" />
-          <use href="#rgPetalSmall" transform="rotate(330 200 200)" />
+          <use href="#rgPetalSmall" /><use href="#rgPetalSmall" transform="rotate(30 200 200)" /><use href="#rgPetalSmall" transform="rotate(60 200 200)" /><use href="#rgPetalSmall" transform="rotate(90 200 200)" /><use href="#rgPetalSmall" transform="rotate(120 200 200)" /><use href="#rgPetalSmall" transform="rotate(150 200 200)" /><use href="#rgPetalSmall" transform="rotate(180 200 200)" /><use href="#rgPetalSmall" transform="rotate(210 200 200)" /><use href="#rgPetalSmall" transform="rotate(240 200 200)" /><use href="#rgPetalSmall" transform="rotate(270 200 200)" /><use href="#rgPetalSmall" transform="rotate(300 200 200)" /><use href="#rgPetalSmall" transform="rotate(330 200 200)" />
         </g>
-
         <circle cx="200" cy="200" r="72" stroke="rgba(255,179,0,.5)" stroke-width="1.2" />
         <circle cx="200" cy="200" r="52" stroke="rgba(255,46,147,.45)" stroke-width="1" stroke-dasharray="6 8" />
         <circle cx="200" cy="200" r="22" stroke="rgba(0,229,255,.6)" stroke-width="1.5" />
         <circle cx="200" cy="200" r="7" fill="rgba(255,179,0,.7)" stroke="none" />
-
-        <g fill="rgba(255,179,0,.6)" stroke="none">
-          <circle cx="200" cy="26" r="3.5" />
-          <circle cx="200" cy="374" r="3.5" />
-          <circle cx="26" cy="200" r="3.5" />
-          <circle cx="374" cy="200" r="3.5" />
-        </g>
       </g>
     </svg>
   </div>
 
-  <!-- Floating lanterns / sparkles / marigold petals -->
   <div class="floaters" id="floaters" aria-hidden="true"></div>
-
-  <!-- Fireworks canvas (full screen, behind the cards) -->
   <canvas class="fireworks" id="fireworks" aria-hidden="true"></canvas>
-
-  <!-- Golden sparkle rain layer (used by the "all diyas lit" surprise) -->
   <div class="sparkle-layer" id="sparkleLayer" aria-hidden="true"></div>
 
-  <!-- =====================================================================
-       SOUND + LITE MODE TOGGLES
-       ===================================================================== -->
-  <button class="sound-toggle" id="soundToggle" type="button"
-          aria-pressed="false" aria-label="Enable sound">
+  <button class="sound-toggle" id="soundToggle" type="button" aria-pressed="false" aria-label="Enable sound">
     <span class="sound-toggle__icon" aria-hidden="true">🔇</span>
   </button>
-
-  <button class="sound-toggle lite-toggle" id="liteToggle" type="button"
-          aria-pressed="false" aria-label="Toggle lite mode (fewer animations)">
+  <button class="sound-toggle lite-toggle" id="liteToggle" type="button" aria-pressed="false" aria-label="Toggle lite mode">
     <span aria-hidden="true">⚡</span>
   </button>
 
-  <!-- =====================================================================
-       MAIN CONTENT
-       ===================================================================== -->
   <main class="page" id="page">
 
-    <!-- ---------- HERO WISH CARD ---------- -->
+    <!-- ============ HERO ============ -->
     <section class="card hero" aria-labelledby="heroTitle">
       <p class="hero__eyebrow">✦ A Neon Diwali Wish ✦</p>
-
       <h1 class="hero__hindi" id="heroTitle" data-text="शुभ दीपावली">
         <span class="hero__hindi-text">शुभ दीपावली</span>
       </h1>
@@ -208,9 +138,7 @@
         <p class="hero__from">From: <span id="fromName">With Love</span></p>
       </div>
 
-      <!-- Visible typewriter output (aria-hidden for screen readers) -->
       <p class="hero__wish" id="wishText">May your Diwali be filled with light, love and endless laughter. 🪔</p>
-      <!-- Screen-reader friendly live region (announces the full wish once) -->
       <p class="visually-hidden" id="wishLive" role="status" aria-live="polite"></p>
 
       <div class="hero__actions">
@@ -219,17 +147,15 @@
       </div>
     </section>
 
-    <!-- ---------- DIYA ROW ---------- -->
+    <!-- ============ DIYA ROW ============ -->
     <section class="card diyas" aria-labelledby="diyaTitle">
       <h2 class="section-title" id="diyaTitle">Light the Diyas</h2>
       <p class="section-sub">Tap each diya — light all five for a little surprise.</p>
-
       <div class="diya-row" id="diyaRow"></div>
-
       <p class="diya-msg" id="diyaMsg">Tap a diya to light it.</p>
     </section>
 
-    <!-- ---------- SHARE / CREATE YOUR OWN WISH ---------- -->
+    <!-- ============ SHARE ============ -->
     <section class="card share" aria-labelledby="shareTitle">
       <h2 class="section-title" id="shareTitle">Create your own wish</h2>
       <p class="section-sub">Fill in the names and share the magic.</p>
@@ -237,14 +163,11 @@
       <form class="share__form" id="shareForm" autocomplete="off" onsubmit="return false;">
         <label class="field">
           <span class="field__label">To (receiver)</span>
-          <input class="field__input" id="toInput" name="to" type="text"
-                 maxlength="40" placeholder="e.g. Rahul" />
+          <input class="field__input" id="toInput" type="text" maxlength="40" placeholder="e.g. Rahul" />
         </label>
-
         <label class="field">
           <span class="field__label">From (sender)</span>
-          <input class="field__input" id="fromInput" name="from" type="text"
-                 maxlength="40" placeholder="e.g. Aman" />
+          <input class="field__input" id="fromInput" type="text" maxlength="40" placeholder="e.g. Aman" />
         </label>
       </form>
 
@@ -257,14 +180,24 @@
       </div>
     </section>
 
-    <!-- ---------- FOOTER ---------- -->
+    <!-- ============ 🎮 MEMORY GAME ============ -->
+    <section class="card memory-game" id="memoryGame" aria-labelledby="gameTitle">
+      <h2 class="section-title" id="gameTitle">🎮 Diya Memory Game</h2>
+      <p class="section-sub">Flip two cards. Match all three pairs to win a special wish!</p>
+
+      <div class="memory-grid" id="memoryGrid" aria-label="Memory game cards"></div>
+
+      <div class="memory-status">
+        <p class="memory-message" id="memoryMsg">Tap a card to begin.</p>
+        <button class="btn btn--ghost" id="memoryReset" type="button" aria-label="Reset memory game">Reset 🔄</button>
+      </div>
+    </section>
+
     <footer class="footer">
       <p>Made with <span class="heart" aria-label="love">❤️</span> for Diwali 2026</p>
     </footer>
   </main>
 
-  <!-- Toast notification -->
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
-
 </body>
 </html>
