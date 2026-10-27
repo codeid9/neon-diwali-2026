@@ -1,6 +1,7 @@
 /* ==========================================================================
    script.js — Neon Diwali Wish Card
-   Vanilla JS only. No libraries, no API calls.
+   Vanilla JS only. Mobile-optimized: fewer particles, capped DPR,
+   optional Lite Mode toggle.
    ========================================================================== */
 
 (() => {
@@ -15,6 +16,7 @@
   const rand = (min, max) => Math.random() * (max - min) + min;
   const pick = (arr) => arr[Math.floor(Math.random() * arr.length)];
   const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+  const isMobile = () => window.innerWidth <= 768;
 
   const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const isReduced = () => reducedMotionQuery.matches;
@@ -237,7 +239,7 @@
     if (!layer) return;
 
     const fragment = document.createDocumentFragment();
-    const count = isReduced() ? 35 : 90;
+    const count = isReduced() ? 25 : isMobile() ? 35 : 90;
 
     for (let i = 0; i < count; i += 1) {
       const star = document.createElement("span");
@@ -260,11 +262,10 @@
   function createFloaters() {
     const layer = $("#floaters");
     if (!layer) return;
-
     if (isReduced()) return;
 
     const types = ["lantern", "petal", "spark"];
-    const count = 16;
+    const count = isMobile() ? 6 : 16;
 
     for (let i = 0; i < count; i += 1) {
       const el = document.createElement("span");
@@ -320,7 +321,7 @@
     let nextAutoAt = 0;
 
     function resize() {
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      dpr = Math.min(window.devicePixelRatio || 1, isMobile() ? 1.25 : 2);
       width = window.innerWidth;
       height = window.innerHeight;
 
@@ -333,12 +334,14 @@
       ctx.clearRect(0, 0, width, height);
     }
 
-    function burst(x, y, count = 72) {
+    function burst(x, y, count) {
+      if (isReduced()) return;
 
       if (!width || !height) resize();
 
+      const n = count ?? (isMobile() ? 42 : 72);
       const baseColor = pick(COLORS);
-      const n = isReduced() ? Math.round(count * 0.3) : count;  
+
       for (let i = 0; i < n; i += 1) {
         const angle = Math.random() * Math.PI * 2;
         const speed = rand(1.5, 7.5);
@@ -357,8 +360,9 @@
         });
       }
 
-      if (particles.length > 1400) {
-        particles.splice(0, particles.length - 1400);
+      const cap = isMobile() ? 800 : 1400;
+      if (particles.length > cap) {
+        particles.splice(0, particles.length - cap);
       }
     }
 
@@ -398,14 +402,14 @@
 
       if (now > nextAutoAt) {
         burst(rand(width * 0.15, width * 0.85), rand(height * 0.12, height * 0.55));
-        nextAutoAt = now + rand(1000, 2000);
+        nextAutoAt = now + (isMobile() ? rand(2200, 3600) : rand(1000, 2000));
       }
 
       rafId = window.requestAnimationFrame(frame);
     }
 
     function start() {
-      if (running) return;
+      if (isReduced() || running) return;
 
       resize();
       running = true;
@@ -422,15 +426,17 @@
     }
 
     function celebrate() {
+      if (isReduced()) return;
 
       if (!running) start();
 
-      for (let i = 0; i < 16; i += 1) {
+      const total = isMobile() ? 10 : 16;
+
+      for (let i = 0; i < total; i += 1) {
         window.setTimeout(() => {
           burst(
             rand(width * 0.1, width * 0.9),
-            rand(height * 0.08, height * 0.65),
-            80
+            rand(height * 0.08, height * 0.65)
           );
         }, i * 110);
       }
@@ -451,10 +457,22 @@
     }
   });
 
-
+  if (reducedMotionQuery.addEventListener) {
+    reducedMotionQuery.addEventListener("change", () => {
+      if (isReduced()) {
+        Fireworks.stop();
+      } else if (introDone) {
+        Fireworks.start();
+      }
+    });
+  }
 
   $("#celebrate").addEventListener("click", () => {
-   
+    if (isReduced()) {
+      showToast("Fireworks are off because reduced motion is enabled.");
+      return;
+    }
+
     Fireworks.celebrate();
     Sound.pop();
   });
@@ -487,7 +505,7 @@
     const layer = $("#sparkleLayer");
     if (!layer) return;
 
-    const count = 60;
+    const count = isMobile() ? 30 : 60;
 
     for (let i = 0; i < count; i += 1) {
       const sparkle = document.createElement("span");
@@ -669,6 +687,30 @@
   }
 
   /* ========================================================================
+     Lite mode toggle (⚡) — manual performance switch
+     ======================================================================== */
+  const liteToggle = $("#liteToggle");
+  let liteOn = false;
+
+  liteToggle.addEventListener("click", () => {
+    liteOn = !liteOn;
+    document.body.classList.toggle("lite-mode", liteOn);
+    liteToggle.setAttribute("aria-pressed", String(liteOn));
+    liteToggle.setAttribute(
+      "aria-label",
+      liteOn ? "Disable lite mode" : "Enable lite mode"
+    );
+
+    if (liteOn) {
+      Fireworks.stop();
+      showToast("Lite mode ON ⚡");
+    } else {
+      if (introDone) Fireworks.start();
+      showToast("Lite mode OFF");
+    }
+  });
+
+  /* ========================================================================
      Intro / tap to light the diya
      ======================================================================== */
   const intro = $("#intro");
@@ -694,7 +736,7 @@
 
       window.setTimeout(() => {
         showRandomWish();
-        Fireworks.start();
+        if (!liteOn) Fireworks.start();
       }, 650);
     }, 900);
   }
@@ -707,7 +749,7 @@
   window.addEventListener(
     "pointerdown",
     (event) => {
-      if (!introDone || isReduced()) return;
+      if (!introDone || isReduced() || liteOn) return;
 
       Fireworks.burst(event.clientX, event.clientY);
       Sound.pop();

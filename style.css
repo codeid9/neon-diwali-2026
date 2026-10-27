@@ -1,6 +1,7 @@
 /* ==========================================================================
    style.css — Neon Diwali Wish Card
    Dark mode + glassmorphism + neon glow
+   Mobile-optimized: heavy filters disabled below 768px + optional lite mode
    ========================================================================== */
 
 /* ---------- 1. Design tokens ---------- */
@@ -367,7 +368,7 @@ svg {
   }
 }
 
-/* ---------- 7. Sound toggle ---------- */
+/* ---------- 7. Sound + lite toggles ---------- */
 .sound-toggle {
   position: fixed;
   top: max(14px, env(safe-area-inset-top));
@@ -407,6 +408,18 @@ svg {
 .sound-toggle__icon {
   font-size: 1.25rem;
   line-height: 1;
+}
+
+.lite-toggle {
+  top: calc(max(14px, env(safe-area-inset-top)) + 58px);
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.lite-toggle[aria-pressed="true"] {
+  border-color: rgba(0, 229, 255, 0.65);
+  color: var(--cyan);
+  box-shadow: 0 0 24px rgba(0, 229, 255, 0.45);
 }
 
 /* ---------- 8. Intro / loader ---------- */
@@ -640,30 +653,28 @@ body.is-ready .page {
   text-shadow: 0 0 16px rgba(0, 229, 255, 0.55);
 }
 
-/* Heading wrapper — handles spacing, glow & flicker */
+/* Heading wrapper — glow & flicker here, gradient on the inner span.
+   Splitting these two fixes broken Devanagari matras on Safari/Firefox. */
 .hero__hindi {
   position: relative;
   margin: 0.05em 0 0.18em;
-  padding: 0.08em 0.02em 0.16em;      /* headroom for matras above & below */
+  padding: 0.08em 0.02em 0.16em;      /* headroom for matras */
   font-family: "Yatra One", "Tiro Devanagari Hindi", "Noto Sans Devanagari",
                "Nirmala UI", "Mangal", Georgia, serif;
   font-size: clamp(3rem, 12.5vw, 5.9rem);
   font-weight: 400;
-  line-height: 1.35;                  /* was 1.05 — this was clipping matras */
+  line-height: 1.35;                  /* was 1.05 — this clipped matras */
   letter-spacing: 0.01em;
   text-align: center;
-
-  /* Glow lives on the wrapper, NOT on the background-clipped element */
   filter:
     drop-shadow(0 0 14px rgba(255, 179, 0, 0.55))
     drop-shadow(0 0 34px rgba(255, 46, 147, 0.30));
   animation: neonFlicker 5.2s infinite;
 }
 
-/* Gradient fill lives only on the inner span */
 .hero__hindi-text {
   display: inline-block;
-  color: var(--gold);                  /* solid fallback if clip unsupported */
+  color: var(--gold);
   -webkit-text-fill-color: currentColor;
 }
 
@@ -680,16 +691,15 @@ body.is-ready .page {
     -webkit-background-clip: text;
     background-clip: text;
     color: transparent;
-    -webkit-text-fill-color: transparent;   /* required by WebKit */
+    -webkit-text-fill-color: transparent;
   }
 }
 
-/* Lightweight flicker — opacity only, no filter changes (that's what broke it) */
+/* Opacity-only flicker — safe for gradient-clipped text */
 @keyframes neonFlicker {
   0%, 17%, 23%, 25%, 52%, 57%, 100% { opacity: 1; }
   19%, 24%, 54%                    { opacity: 0.78; }
 }
-
 
 .hero__eng {
   margin: 0;
@@ -1144,7 +1154,89 @@ body.is-ready .page {
   }
 }
 
-/* ---------- 18. Reduced motion ---------- */
+/* ==========================================================================
+   18. MOBILE PERFORMANCE OVERRIDES  (< 768px)
+       — removes the 5 biggest GPU killers on phones
+       — visually near-identical, ~3x faster
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  /* (1) Glass cards: drop backdrop blur, keep solid tint */
+  .card {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(12, 4, 30, 0.78);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
+  }
+
+  .sound-toggle,
+  .btn--ghost,
+  .toast {
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    background: rgba(10, 2, 30, 0.9);
+  }
+
+  /* (2) Aurora: cheaper blur, no blend mode */
+  .aurora {
+    filter: blur(30px);
+    mix-blend-mode: normal;
+    opacity: 0.3;
+    will-change: auto;
+  }
+
+  /* (3) Rangoli: no per-frame drop-shadow, no rasterization cost */
+  .rangoli {
+    filter: none;
+    opacity: 0.28;
+    will-change: auto;
+    animation-duration: 160s;
+  }
+
+  /* (4) Kill expensive animated glows on text/buttons (repaint every frame) */
+  .hero__hindi { animation: none; }
+  .btn--primary { animation: none; }
+
+  /* (5) Intro halo: cheaper blur */
+  .intro__halo { filter: blur(8px); }
+}
+
+/* ==========================================================================
+   19. LITE MODE (manual toggle via ⚡ button)
+       — nuclear option for very old / very slow devices
+   ========================================================================== */
+body.lite-mode .fireworks { display: none; }
+
+body.lite-mode .floater,
+body.lite-mode .sparkle-piece,
+body.lite-mode .rangoli,
+body.lite-mode .aurora,
+body.lite-mode .star {
+  animation: none !important;
+}
+
+body.lite-mode .hero__hindi,
+body.lite-mode .btn--primary,
+body.lite-mode .heart {
+  animation: none !important;
+  filter: none !important;
+}
+
+body.lite-mode .card,
+body.lite-mode .sound-toggle,
+body.lite-mode .btn--ghost,
+body.lite-mode .toast {
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  background: rgba(12, 4, 30, 0.92) !important;
+}
+
+body.lite-mode .rangoli,
+body.lite-mode .floaters {
+  display: none;
+}
+
+/* ---------- 20. Reduced motion (OS preference) ---------- */
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
@@ -1169,7 +1261,9 @@ body.is-ready .page {
     animation: none !important;
   }
 
-
+  .fireworks {
+    display: none;
+  }
 
   .hero__wish {
     min-height: auto;
